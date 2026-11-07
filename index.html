@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Market Learning Portal - Master Indian Equities</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100 min-h-full flex flex-col transition-colors duration-200">
+
+    <!-- Top Navigation Bar -->
+    <header class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('dashboard')">
+                <div class="bg-indigo-600 text-white p-2.5 rounded-xl shadow-md flex items-center justify-center">
+                    <i class="fa-solid fa-chart-line text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight tracking-tight">DalalStreet Academy</h1>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Master Indian Stock Markets</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div id="overall-progress-pill" class="hidden sm:flex items-center space-x-2 bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-200 dark:border-indigo-800 px-3 py-1.5 rounded-full text-xs font-medium text-indigo-700 dark:text-indigo-300">
+                    <i class="fa-solid fa-trophy"></i>
+                    <span id="progress-text">0% Completed</span>
+                </div>
+                <button onclick="toggleDarkMode()" class="p-2 rounded-lg bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 transition" aria-label="Toggle Theme">
+                    <i id="theme-icon" class="fa-solid fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- DASHBOARD TAB -->
+        <div id="view-dashboard" class="space-y-8">
+            <!-- Hero Banner -->
+            <div class="bg-gradient-to-r from-indigo-600 to-violet-600 rounded-3xl p-6 sm:p-10 text-white shadow-xl relative overflow-hidden">
+                <div class="absolute right-0 bottom-0 translate-x-8 translate-y-8 opacity-10 pointer-events-none">
+                    <i class="fa-solid fa-indian-rupee-sign text-9xl"></i>
+                </div>
+                <div class="max-w-2xl relative z-10">
+                    <span class="bg-white/20 text-white text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider mb-4 inline-block">4-Week Structured Curriculum</span>
+                    <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight mb-3">Your Journey to Financial Independence Starts Here</h2>
+                    <p class="text-indigo-100 text-sm sm:text-base leading-relaxed mb-6">Learn how the Indian stock market works, analyze company financials like a professional, master asset allocation, and put your knowledge to test with curated quizzes.</p>
+                    <div class="flex flex-wrap gap-4">
+                        <button onclick="startLearning()" class="bg-white text-indigo-600 hover:bg-indigo-50 font-semibold px-6 py-3 rounded-xl shadow-md transition duration-150 flex items-center space-x-2">
+                            <span>Continue Learning</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                        <button onclick="switchTab('quiz')" class="bg-indigo-700 hover:bg-indigo-800 text-white font-semibold px-6 py-3 rounded-xl border border-indigo-500 shadow-md transition duration-150 flex items-center space-x-2">
+                            <i class="fa-solid fa-brain"></i>
+                            <span>Take Final Assessment</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modules Grid -->
+            <div>
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-bold tracking-tight">Curriculum Modules</h3>
+                    <span class="text-sm text-slate-500 dark:text-slate-400" id="modules-completed-count">0 of 4 Modules Completed</span>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="modules-container">
+                    <!-- Populated via JavaScript -->
+                </div>
+            </div>
+
+            <!-- Quick Stats & Tools -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center space-x-4">
+                    <div class="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 p-4 rounded-xl">
+                        <i class="fa-solid fa-book-open text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">Total Chapters</p>
+                        <h4 class="text-2xl font-bold">12 Chapters</h4>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center space-x-4">
+                    <div class="bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 p-4 rounded-xl">
+                        <i class="fa-solid fa-list-check text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">Assessment Score</p>
+                        <h4 class="text-2xl font-bold" id="dashboard-best-score">Not Attempted</h4>
+                    </div>
+                </div>
+                <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm flex items-center space-x-4">
+                    <div class="bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 p-4 rounded-xl">
+                        <i class="fa-solid fa-graduation-cap text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-slate-500 dark:text-slate-400">Status</p>
+                        <h4 class="text-2xl font-bold" id="dashboard-status">In Progress</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODULE DETAIL / CHAPTER VIEWER TAB -->
+        <div id="view-module" class="hidden space-y-6">
+            <div class="flex items-center justify-between bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                <button onclick="switchTab('dashboard')" class="text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center space-x-2">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>Back to Dashboard</span>
+                </button>
+                <div class="text-sm font-medium text-slate-500 dark:text-slate-400" id="current-module-badge">Week 1</div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                <!-- Chapter Navigation Sidebar -->
+                <div class="lg:col-span-1 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm h-fit space-y-4">
+                    <h4 class="font-bold text-base border-b border-slate-100 dark:border-slate-700 pb-3" id="module-sidebar-title">Module Chapters</h4>
+                    <div class="space-y-2" id="chapter-nav-list">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+
+                <!-- Chapter Content Display -->
+                <div class="lg:col-span-3 bg-white dark:bg-slate-800 p-6 sm:p-10 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-6">
+                    <div class="border-b border-slate-100 dark:border-slate-700 pb-4 flex justify-between items-start">
+                        <div>
+                            <span class="text-xs font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider" id="content-module-tag">Module 1</span>
+                            <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight mt-1" id="content-chapter-title">Chapter Title</h2>
+                        </div>
+                        <button id="mark-complete-btn" onclick="toggleChapterComplete()" class="px-4 py-2 rounded-xl text-sm font-semibold border transition flex items-center space-x-2">
+                            <i class="fa-solid fa-check"></i>
+                            <span id="mark-btn-text">Mark as Read</span>
+                        </button>
+                    </div>
+
+                    <div id="content-body" class="prose dark:prose-invert max-w-none space-y-4 text-slate-600 dark:text-slate-300 leading-relaxed text-base">
+                        <!-- HTML content injected here -->
+                    </div>
+
+                    <div class="pt-8 border-t border-slate-100 dark:border-slate-700 flex justify-between items-center">
+                        <button id="prev-chapter-btn" onclick="navigateChapter(-1)" class="px-4 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-xl font-medium text-sm transition flex items-center space-x-2">
+                            <i class="fa-solid fa-chevron-left"></i>
+                            <span>Previous Chapter</span>
+                        </button>
+                        <button id="next-chapter-btn" onclick="navigateChapter(1)" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-medium text-sm transition flex items-center space-x-2">
+                            <span>Next Chapter</span>
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ASSESSMENT QUIZ TAB -->
+        <div id="view-quiz" class="hidden max-w-3xl mx-auto space-y-8">
+            <div class="flex items-center justify-between">
+                <button onclick="switchTab('dashboard')" class="text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center space-x-2">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span>Back to Dashboard</span>
+                </button>
+                <div class="text-sm font-medium text-slate-500 dark:text-slate-400">Final Assessment Quiz</div>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 p-6 sm:p-10 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-6">
+                <div class="text-center space-y-2">
+                    <h2 class="text-2xl font-extrabold">Stock Market Certification Exam</h2>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Test your mastery across all 4 weeks of the Indian market curriculum. 10 questions total.</p>
+                </div>
+
+                <!-- Quiz Container -->
+                <div id="quiz-question-container" class="space-y-6">
+                    <!-- Injected dynamically -->
+                </div>
+
+                <!-- Quiz Actions & Results -->
+                <div id="quiz-controls" class="flex justify-between items-center pt-6 border-t border-slate-100 dark:border-slate-700">
+                    <span id="quiz-progress-indicator" class="text-sm font-medium text-slate-500 dark:text-slate-400">Question 1 of 10</span>
+                    <button id="quiz-next-btn" onclick="nextQuizQuestion()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-xl font-semibold text-sm transition disabled:opacity-50" disabled>
+                        Next Question
+                    </button>
+                </div>
+
+                <!-- Results Box -->
+                <div id="quiz-results-box" class="hidden space-y-6 text-center py-6">
+                    <div class="w-20 h-20 bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400 rounded-full flex items-center justify-center mx-auto text-3xl">
+                        <i class="fa-solid fa-award"></i>
+                    </div>
+                    <div class="space-y-2">
+                        <h3 class="text-2xl font-bold">Quiz Completed!</h3>
+                        <p class="text-slate-600 dark:text-slate-300 text-lg">You scored <span id="final-score-val" class="font-bold text-indigo-600 dark:text-indigo-400">0</span> out of 10 (<span id="final-percentage">0</span>%)</p>
+                        <p id="result-feedback-message" class="text-sm text-slate-500 dark:text-slate-400">Great effort!</p>
+                    </div>
+                    <div class="flex justify-center space-x-4 pt-4">
+                        <button onclick="resetQuiz()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-semibold text-sm transition">
+                            Retake Quiz
+                        </button>
+                        <button onclick="switchTab('dashboard')" class="bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 px-6 py-3 rounded-xl font-semibold text-sm transition">
+                            Return to Dashboard
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-auto border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 py-6 text-center text-xs text-slate-500 dark:text-slate-400">
+        <p>&copy; 2026 DalalStreet Academy. All rights reserved. Designed for Indian Stock Market Learners.</p>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Curriculum Data Structure
+        const curriculumData = [
+            {
+                id: 1,
+                title: "Week 1: Foundations & Market Mechanics",
+                description: "Understand where your money goes, how stock exchanges work, indices, and regulatory frameworks.",
+                icon: "fa-building-columns",
+                chapters: [
+                    {
+                        id: "1-1",
+                        title: "What is a Stock & Share?",
+                        html: `
+                            <p>When you buy a <strong>stock</strong>, you are purchasing a fractional ownership stake (a share) in a publicly-traded corporation. If the company grows, increases its profits, and expands its business value, your share of ownership becomes more valuable.</p>
+                            <h4 class="font-bold text-lg mt-4">Why do companies issue shares?</h4>
+                            <p>Companies need capital to build new factories, hire top talent, invest in R&D, or pay off debt. Instead of taking massive bank loans, they sell a percentage of their company to the public via an <strong>Initial Public Offering (IPO)</strong>.</p>
+                            <div class="bg-indigo-50 dark:bg-indigo-950/40 p-4 rounded-xl border border-indigo-100 dark:border-indigo-900/60 my-4">
+                                <h5 class="font-semibold text-indigo-900 dark:text-indigo-300 mb-1"><i class="fa-solid fa-lightbulb mr-2"></i>Real-World Indian Example</h5>
+                                <p class="text-sm text-indigo-800 dark:text-indigo-200">When Tata Consultancy Services (TCS) or Reliance Industries issues shares, public retail investors and massive institutional funds (like SBI Mutual Fund or LIC) buy ownership units, providing capital for corporate expansion.</p>
+                            </div>
+                        `
+                    },
+                    {
+                        id: "1-2",
+                        title: "Stock Exchanges: BSE & NSE",
+                        html: `
+                            <p>Stock exchanges are regulated marketplaces where buyers and sellers meet to trade stocks. In India, there are two primary nationwide stock exchanges:</p>
+                            <ul class="list-disc pl-5 space-y-2 my-4">
+                                <li><strong>BSE (Bombay Stock Exchange):</strong> Asia's oldest stock exchange, established in 1875. Located on Dalal Street, Mumbai. Its benchmark index is the <strong>Sensex</strong> (30 major companies).</li>
+                                <li><strong>NSE (National Stock Exchange):</strong> Established in 1992, modern electronic exchange handling the vast majority of India's equity trading volume. Its benchmark index is the <strong>Nifty 50</strong>.</li>
+                            </ul>
+                            <p>Transactions executed on these exchanges are cleared and settled safely through depositories (<strong>NSDL</strong> and <strong>CDSL</strong>) which hold your shares in electronic demat (dematerialized) accounts.</p>
+                        `
+                    },
+                    {
+                        id: "1-3",
+                        title: "Indices & Regulators (SEBI)",
+                        html: `
+                            <p>An <strong>Index</strong> (like Nifty 50 or Sensex) tracks the performance of a basket of top stocks, acting as a thermometer for the overall health of the stock market.</p>
+                            <h4 class="font-bold text-lg mt-4">The Market Watchdog: SEBI</h4>
+                            <p>The <strong>Securities and Exchange Board of India (SEBI)</strong> is the statutory regulatory body established in 1992 to protect the interests of investors in securities and to promote the development of the securities market.</p>
+                            <div class="bg-amber-50 dark:bg-amber-950/40 p-4 rounded-xl border border-amber-200 dark:border-amber-900/60 my-4">
+                                <h5 class="font-semibold text-amber-900 dark:text-amber-300 mb-1"><i class="fa-solid fa-shield-halved mr-2"></i>Why SEBI Matters</h5>
+                                <p class="text-sm text-amber-800 dark:text-amber-200">SEBI ensures fair trading practices, prevents insider trading, regulates mutual funds, and audits stockbrokers (like Zerodha, Groww, Angel One) to keep your funds and investments safe.</p>
+                            </div>
+                        `
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: "Week 2: Investment Styles & Strategies",
+                description: "Figure out how you want to invest: Direct equities vs Mutual funds, SIPs, Lumpsum, and Growth vs Value.",
+                icon: "fa-chess-knight",
+                chapters: [
+                    {
+                        id: "2-1",
+                        title: "Direct Stocks vs. Mutual Funds",
+                        html: `
+                            <p>As an investor, you have two primary routes to participate in the Indian stock market:</p>
+                            <h4 class="font-bold text-lg mt-4">1. Direct Stock Investing</h4>
+                            <p>You research, analyze, and buy individual shares (e.g., buying shares of Infosys, HDFC Bank, or Tata Motors directly through your broker). This offers high growth potential but requires deep research and time.</p>
+                            <h4 class="font-bold text-lg mt-4">2. Mutual Funds & ETFs</h4>
+                            <p>A professional fund manager (or an automated index fund) pools money from thousands of investors to buy a diversified basket of 50 to 100+ stocks. This reduces risk through instant diversification.</p>
+                        `
+                    },
+                    {
+                        id: "2-2",
+                        title: "The Power of SIP (Systematic Investment Plan)",
+                        html: `
+                            <p>Trying to time the market ("buy the lowest dip, sell the absolute peak") is notoriously difficult even for Wall Street experts. <strong>SIP</strong> is the antidote to market volatility.</p>
+                            <div class="bg-indigo-50 dark:bg-indigo-950/40 p-4 rounded-xl border border-indigo-100 dark:border-indigo-900/60 my-4">
+                                <h5 class="font-semibold text-indigo-900 dark:text-indigo-300 mb-1"><i class="fa-solid fa-coins mr-2"></i>Rupee Cost Averaging</h5>
+                                <p class="text-sm text-indigo-800 dark:text-indigo-200">When markets are high, your fixed monthly SIP buys fewer units. When markets crash, your fixed SIP automatically buys more units at a discount. Over years, this averages out your purchase cost beautifully.</p>
+                            </div>
+                        `
+                    },
+                    {
+                        id: "2-3",
+                        title: "Value vs. Growth Investing",
+                        html: `
+                            <p>Investors generally categorize strategies into two philosophies:</p>
+                            <ul class="list-disc pl-5 space-y-2 my-4">
+                                <li><strong>Value Investing:</strong> Finding established companies trading below their intrinsic worth (e.g., strong PSU banks or utility companies offering stable dividends). Popularized by Benjamin Graham and Warren Buffett.</li>
+                                <li><strong>Growth Investing:</strong> Investing in young or dominant companies growing revenues and profits rapidly (e.g., quick-commerce, SaaS, or renewable energy leaders), even if their stock prices look expensive.</li>
+                            </ul>
+                        `
+                    }
+                ]
+            },
+            {
+                id: 3,
+                title: "Week 3: Financial Statements & Analysis",
+                description: "Learn how to look under the hood of a company using Balance Sheets, P&L statements, and key ratios.",
+                icon: "fa-magnifying-glass-chart",
+                chapters: [
+                    {
+                        id: "3-1",
+                        title: "The Financial Statement Trio",
+                        html: `
+                            <p>To evaluate a company before buying its stock, you must analyze its financial health through three core statements:</p>
+                            <ol class="list-decimal pl-5 space-y-2 my-4">
+                                <li><strong>Balance Sheet:</strong> A snapshot of what the company owns (Assets) and what it owes (Liabilities) at a specific point in time.</li>
+                                <li><strong>Profit & Loss (P&L) Statement:</strong> Shows revenues, operating expenses, and net profit over a financial quarter or year.</li>
+                                <li><strong>Cash Flow Statement:</strong> Tracks the actual physical cash coming in and going out, ensuring the company isn't just showing paper profits.</li>
+                            </ol>
+                        `
+                    },
+                    {
+                        id: "3-2",
+                        title: "Crucial Financial Ratios",
+                        html: `
+                            <p>Ratios allow you to compare companies of different sizes instantly:</p>
+                            <ul class="list-disc pl-5 space-y-2 my-4">
+                                <li><strong>P/E Ratio (Price-to-Earnings):</strong> Compares stock price to earnings per share. A high P/E means investors expect high future growth; a low P/E might mean a bargain (or a troubled company).</li>
+                                <li><strong>ROE (Return on Equity):</strong> Measures how efficiently management generates profits from shareholders' equity. Higher ROE (>15%) is generally preferred.</li>
+                                <li><strong>Debt-to-Equity Ratio:</strong> Shows how much debt a company is using to finance operations relative to owned funds. Lower debt is safer.</li>
+                            </ul>
+                        `
+                    },
+                    {
+                        id: "3-3",
+                        title: "Introduction to Technical Analysis",
+                        html: `
+                            <p>While fundamental analysis answers <em>what</em> company to buy based on business strength, <strong>Technical Analysis</strong> studies price charts, trading volume, and momentum to determine <em>when</em> to buy or sell.</p>
+                            <p>Key concepts include <strong>Support and Resistance</strong> levels, moving averages (e.g., 50-day and 200-day exponential moving averages), and trendlines.</p>
+                        `
+                    }
+                ]
+            },
+            {
+                id: 4,
+                title: "Week 4: Portfolio Construction & Risk Management",
+                description: "Asset allocation, sector diversification, taxation rules in India, and managing behavioral pitfalls.",
+                icon: "fa-shield-heart",
+                chapters: [
+                    {
+                        id: "4-1",
+                        title: "Asset Allocation & Diversification",
+                        html: `
+                            <p>As the adage goes, <em>"Don't put all your eggs in one basket."</em> Proper portfolio construction involves spreading risk across:</p>
+                            <ul class="list-disc pl-5 space-y-2 my-4">
+                                <li><strong>Asset Classes:</strong> Equity, Fixed Income (Debt/FDs), Gold, and Real Estate.</li>
+                                <li><strong>Sectors:</strong> Balancing cyclical sectors (Banking, Auto, Metals) with defensive sectors (FMCG, Pharma, IT).</li>
+                            </ul>
+                        `
+                    },
+                    {
+                        id: "4-2",
+                        title: "Taxation on Stocks & Mutual Funds in India",
+                        html: `
+                            <p>Understanding tax laws ensures your net returns remain healthy:</p>
+                            <ul class="list-disc pl-5 space-y-2 my-4">
+                                <li><strong>LTCG (Long-Term Capital Gains):</strong> Profits from equity shares or equity mutual funds held for <strong>more than 1 year</strong> are taxed at concessionary rates (currently 12.5% above ₹1.25 Lakhs per financial year in India).</li>
+                                <li><strong>STCG (Short-Term Capital Gains):</strong> Profits from shares sold <strong>within 1 year</strong> are taxed at 20%.</li>
+                            </ul>
+                        `
+                    },
+                    {
+                        id: "4-3",
+                        title: "Behavioral Finance & Avoiding Pitfalls",
+                        html: `
+                            <p>Your worst enemy in the stock market isn't the economy—it's your own emotions.</p>
+                            <div class="bg-rose-50 dark:bg-rose-950/40 p-4 rounded-xl border border-rose-200 dark:border-rose-900/60 my-4">
+                                <h5 class="font-semibold text-rose-900 dark:text-rose-300 mb-1"><i class="fa-solid fa-triangle-exclamation mr-2"></i>Common Traps to Avoid</h5>
+                                <p class="text-sm text-rose-800 dark:text-rose-200">Avoid panic selling during market corrections, chasing "hot stock tips" on social media, and FOMO (Fear of Missing Out) buying at market peaks.</p>
+                            </div>
+                        `
+                    }
+                ]
+            }
+        ];
+
+        // Quiz Questions Data (10 questions based on curriculum)
+        const quizQuestions = [
+            {
+                question: "Which stock exchange in India is known as Asia's oldest stock exchange?",
+                options: ["National Stock Exchange (NSE)", "Bombay Stock Exchange (BSE)", "Multi Commodity Exchange (MCX)", "Calcutta Stock Exchange"],
+                correct: 1,
+                explanation: "The Bombay Stock Exchange (BSE), established in 1875 on Dalal Street, is Asia's oldest stock exchange."
+            },
+            {
+                question: "What does Nifty 50 represent?",
+                options: ["Top 50 companies listed on the BSE", "Top 50 largest and most liquid companies on the NSE", "Top 50 banking stocks in India", "Top 50 manufacturing startups"],
+                correct: 1,
+                explanation: "Nifty 50 is the flagship index of the National Stock Exchange (NSE) representing the top 50 companies across various sectors."
+            },
+            {
+                question: "Who is the statutory regulator of the securities market in India?",
+                options: ["Reserve Bank of India (RBI)", "Securities and Exchange Board of India (SEBI)", "Ministry of Finance", "National Stock Exchange (NSE)"],
+                correct: 1,
+                explanation: "SEBI was established in 1992 to protect investor interests and regulate the securities markets in India."
+            },
+            {
+                question: "What is the primary benefit of investing via a Systematic Investment Plan (SIP)?",
+                options: ["Guaranteed 30% annual returns", "Rupee Cost Averaging and investment discipline", "Zero taxation on profits", "Exemption from demat account fees"],
+                correct: 1,
+                explanation: "SIP automates regular investments, helping investors buy more units when markets are low and fewer when high (Rupee Cost Averaging)."
+            },
+            {
+                question: "Which financial statement provides a snapshot of a company's assets and liabilities?",
+                options: ["Profit & Loss Statement", "Cash Flow Statement", "Balance Sheet", "Auditor's Report"],
+                correct: 2,
+                explanation: "The Balance Sheet is a financial snapshot detailing what a company owns (assets) and owes (liabilities) at a specific date."
+            },
+            {
+                question: "What does a high Price-to-Earnings (P/E) ratio typically indicate?",
+                options: ["The company is bankrupt", "Investors expect high future growth from the company", "The company pays massive dividends", "The stock has zero volatility"],
+                correct: 1,
+                explanation: "A high P/E ratio suggests that investors are willing to pay more per rupee of earnings because they anticipate robust future growth."
+            },
+            {
+                question: "What is the holding period threshold in India to qualify for Long-Term Capital Gains (LTCG) on equity shares?",
+                options: ["More than 3 months", "More than 6 months", "More than 1 year", "More than 3 years"],
+                correct: 2,
+                explanation: "Equity shares and equity mutual funds held for more than 12 months (1 year) are classified as long-term capital assets."
+            },
+            {
+                question: "What does the Debt-to-Equity ratio measure?",
+                options: ["Company's daily sales volume", "How much debt a company uses relative to shareholder equity", "Dividend payout frequency", "Promoter stock pledging percentage"],
+                correct: 1,
+                explanation: "The Debt-to-Equity ratio evaluates financial leverage by comparing total liabilities to shareholder equity."
+            },
+            {
+                question: "Which investment style focuses on finding established companies trading below their true intrinsic value?",
+                options: ["Growth Investing", "Value Investing", "Momentum Trading", "Crypto Arbitrage"],
+                correct: 1,
+                explanation: "Value investing involves identifying undervalued companies with solid fundamentals, popularized by Benjamin Graham."
+            },
+            {
+                question: "What is a recommended psychological approach during a sudden stock market correction?",
+                options: ["Panic sell all holdings immediately", "Ignore emotional impulses and stick to your long-term asset allocation plan", "Take high-interest personal loans to buy penny stocks", "Stop checking your portfolio forever"],
+                correct: 1,
+                explanation: "Market corrections are normal; sticking to your disciplined investment plan prevents locking in emotional losses."
+            }
+        ];
+
+        // App State
+        let currentTab = 'dashboard';
+        let currentModuleIndex = 0;
+        let currentChapterIndex = 0;
+        let userProgress = JSON.parse(localStorage.getItem('dalal_progress')) || { completedChapters: [], bestScore: null };
+        
+        // Quiz State
+        let currentQuizIndex = 0;
+        let selectedAnswers = {};
+        let quizSubmitted = false;
+
+        // Initialization
+        window.addEventListener('DOMContentLoaded', () => {
+            initTheme();
+            renderDashboard();
+            updateProgressPill();
+        });
+
+        // Theme Management
+        function initTheme() {
+            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+                document.getElementById('theme-icon').className = 'fa-solid fa-sun';
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.getElementById('theme-icon').className = 'fa-solid fa-moon';
+            }
+        }
+
+        function toggleDarkMode() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+                document.getElementById('theme-icon').className = 'fa-solid fa-moon';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+                document.getElementById('theme-icon').className = 'fa-solid fa-sun';
+            }
+        }
+
+        // Tab Navigation
+        function switchTab(tab) {
+            currentTab = tab;
+            document.getElementById('view-dashboard').classList.add('hidden');
+            document.getElementById('view-module').classList.add('hidden');
+            document.getElementById('view-quiz').classList.add('hidden');
+
+            if (tab === 'dashboard') {
+                document.getElementById('view-dashboard').classList.remove('hidden');
+                renderDashboard();
+            } else if (tab === 'module') {
+                document.getElementById('view-module').classList.remove('hidden');
+                renderModuleChapterView();
+            } else if (tab === 'quiz') {
+                document.getElementById('view-quiz').classList.remove('hidden');
+                initQuiz();
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function startLearning() {
+            currentModuleIndex = 0;
+            currentChapterIndex = 0;
+            switchTab('module');
+        }
+
+        // Dashboard Rendering
+        function renderDashboard() {
+            const container = document.getElementById('modules-container');
+            container.innerHTML = '';
+
+            let totalChaptersCount = 0;
+            curriculumData.forEach(mod => totalChaptersCount += mod.chapters.length);
+            
+            let completedCount = userProgress.completedChapters.length;
+            document.getElementById('modules-completed-count').textContent = `${Math.min(4, Math.floor(completedCount / 3))} of 4 Modules Completed`;
+
+            curriculumData.forEach((mod, mIdx) => {
+                let modCompleted = mod.chapters.every(ch => userProgress.completedChapters.includes(ch.id));
+                let completedInMod = mod.chapters.filter(ch => userProgress.completedChapters.includes(ch.id)).length;
+                let percent = Math.round((completedInMod / mod.chapters.length) * 100);
+
+                let card = document.createElement('div');
+                card.className = "bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm hover:border-indigo-500 dark:hover:border-indigo-500 transition cursor-pointer flex flex-col justify-between";
+                card.onclick = () => openModule(mIdx, 0);
+
+                card.innerHTML = `
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 p-3 rounded-xl">
+                                <i class="fa-solid ${mod.icon} text-lg"></i>
+                            </div>
+                            <span class="text-xs font-semibold px-2.5 py-1 rounded-full ${modCompleted ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300' : 'bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300'}">
+                                ${completedInMod}/${mod.chapters.length} Chapters
+                            </span>
+                        </div>
+                        <h4 class="font-bold text-lg mb-2">${mod.title}</h4>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">${mod.description}</p>
+                    </div>
+                    <div>
+                        <div class="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden mb-3">
+                            <div class="bg-indigo-600 h-full transition-all duration-300" style="width: ${percent}%"></div>
+                        </div>
+                        <div class="flex justify-between items-center text-xs font-semibold text-indigo-600 dark:text-indigo-400">
+                            <span>Explore Module</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            // Stats update
+            if (userProgress.bestScore !== null) {
+                document.getElementById('dashboard-best-score').textContent = `${userProgress.bestScore} / 10`;
+            } else {
+                document.getElementById('dashboard-best-score').textContent = 'Not Attempted';
+            }
+
+            if (completedCount >= totalChaptersCount) {
+                document.getElementById('dashboard-status').textContent = 'Completed 🎉';
+            } else if (completedCount > 0) {
+                document.getElementById('dashboard-status').textContent = 'In Progress';
+            } else {
+                document.getElementById('dashboard-status').textContent = 'Not Started';
+            }
+        }
+
+        function openModule(mIdx, cIdx) {
+            currentModuleIndex = mIdx;
+            currentChapterIndex = cIdx;
+            switchTab('module');
+        }
+
+        // Module Chapter View Rendering
+        function renderModuleChapterView() {
+            let mod = curriculumData[currentModuleIndex];
+            let chapter = mod.chapters[currentChapterIndex];
+
+            document.getElementById('current-module-badge').textContent = mod.title;
+            document.getElementById('module-sidebar-title').textContent = mod.title.split(':')[0];
+            document.getElementById('content-module-tag').textContent = `Module ${mod.id} • Chapter ${currentChapterIndex + 1} of ${mod.chapters.length}`;
+            document.getElementById('content-chapter-title').textContent = chapter.title;
+            document.getElementById('content-body').innerHTML = chapter.html;
+
+            // Render Sidebar Chapter List
+            let sidebarList = document.getElementById('chapter-nav-list');
+            sidebarList.innerHTML = '';
+            mod.chapters.forEach((ch, idx) => {
+                let isCurrent = idx === currentChapterIndex;
+                let isCompleted = userProgress.completedChapters.includes(ch.id);
+
+                let item = document.createElement('button');
+                item.className = `w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium transition flex items-center justify-between ${isCurrent ? 'bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800' : 'hover:bg-slate-50 dark:hover:bg-slate-700/50 text-slate-600 dark:text-slate-300'}`;
+                item.onclick = () => {
+                    currentChapterIndex = idx;
+                    renderModuleChapterView();
+                };
+
+                item.innerHTML = `
+                    <span class="truncate pr-2">${idx + 1}. ${ch.title}</span>
+                    ${isCompleted ? '<i class="fa-solid fa-circle-check text-emerald-500 text-xs"></i>' : '<i class="fa-regular fa-circle text-slate-300 dark:text-slate-600 text-xs"></i>'}
+                `;
+                sidebarList.appendChild(item);
+            });
+
+            // Update mark complete button state
+            let markBtn = document.getElementById('mark-complete-btn');
+            let markBtnText = document.getElementById('mark-btn-text');
+            if (userProgress.completedChapters.includes(chapter.id)) {
+                markBtn.className = "px-4 py-2 rounded-xl text-sm font-semibold border border-emerald-300 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-300 transition flex items-center space-x-2";
+                markBtnText.textContent = "Completed";
+            } else {
+                markBtn.className = "px-4 py-2 rounded-xl text-sm font-semibold border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition flex items-center space-x-2";
+                markBtnText.textContent = "Mark as Read";
+            }
+
+            // Pagination button states
+            document.getElementById('prev-chapter-btn').disabled = (currentModuleIndex === 0 && currentChapterIndex === 0);
+            document.getElementById('prev-chapter-btn').style.opacity = (currentModuleIndex === 0 && currentChapterIndex === 0) ? '0.5' : '1';
+        }
+
+        function toggleChapterComplete() {
+            let mod = curriculumData[currentModuleIndex];
+            let chapter = mod.chapters[currentChapterIndex];
+
+            if (userProgress.completedChapters.includes(chapter.id)) {
+                userProgress.completedChapters = userProgress.completedChapters.filter(id => id !== chapter.id);
+            } else {
+                userProgress.completedChapters.push(chapter.id);
+            }
+
+            localStorage.setItem('dalal_progress', JSON.stringify(userProgress));
+            renderModuleChapterView();
+            updateProgressPill();
+        }
+
+        function navigateChapter(direction) {
+            let mod = curriculumData[currentModuleIndex];
+            currentChapterIndex += direction;
+
+            if (currentChapterIndex >= mod.chapters.length) {
+                if (currentModuleIndex < curriculumData.length - 1) {
+                    currentModuleIndex++;
+                    currentChapterIndex = 0;
+                } else {
+                    currentChapterIndex = mod.chapters.length - 1;
+                }
+            } else if (currentChapterIndex < 0) {
+                if (currentModuleIndex > 0) {
+                    currentModuleIndex--;
+                    currentChapterIndex = curriculumData[currentModuleIndex].chapters.length - 1;
+                } else {
+                    currentChapterIndex = 0;
+                }
+            }
+            renderModuleChapterView();
+        }
+
+        function updateProgressPill() {
+            let total = 0;
+            curriculumData.forEach(m => total += m.chapters.length);
+            let comp = userProgress.completedChapters.length;
+            let percent = Math.round((comp / total) * 100);
+            document.getElementById('progress-text').textContent = `${percent}% Completed`;
+        }
+
+        // Quiz Logic
+        function initQuiz() {
+            currentQuizIndex = 0;
+            selectedAnswers = {};
+            quizSubmitted = false;
+            document.getElementById('quiz-results-box').classList.add('hidden');
+            document.getElementById('quiz-question-container').classList.remove('hidden');
+            document.getElementById('quiz-controls').classList.remove('hidden');
+            renderQuizQuestion();
+        }
+
+        function renderQuizQuestion() {
+            let q = quizQuestions[currentQuizIndex];
+            let container = document.getElementById('quiz-question-container');
+            document.getElementById('quiz-progress-indicator').textContent = `Question ${currentQuizIndex + 1} of ${quizQuestions.length}`;
+
+            let html = `
+                <div class="space-y-4">
+                    <h3 class="font-bold text-lg text-slate-800 dark:text-slate-100">${currentQuizIndex + 1}. ${q.question}</h3>
+                    <div class="space-y-3">
+            `;
+
+            q.options.forEach((opt, oIdx) => {
+                let isSelected = selectedAnswers[currentQuizIndex] === oIdx;
+                html += `
+                    <button onclick="selectQuizOption(${oIdx})" class="w-full text-left p-4 rounded-xl border transition flex items-center space-x-3 ${isSelected ? 'border-indigo-600 bg-indigo-50/50 dark:bg-indigo-950/40 dark:border-indigo-500' : 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50'}">
+                        <div class="w-5 h-5 rounded-full border flex items-center justify-center text-xs ${isSelected ? 'border-indigo-600 bg-indigo-600 text-white' : 'border-slate-300 dark:border-slate-600'}">
+                            ${isSelected ? '<i class="fa-solid fa-check text-[10px]"></i>' : ''}
+                        </div>
+                        <span class="text-sm font-medium">${opt}</span>
+                    </button>
+                `;
+            });
+
+            html += `</div></div>`;
+            container.innerHTML = html;
+
+            let nextBtn = document.getElementById('quiz-next-btn');
+            if (selectedAnswers[currentQuizIndex] !== undefined) {
+                nextBtn.disabled = false;
+                nextBtn.textContent = (currentQuizIndex === quizQuestions.length - 1) ? 'Submit Assessment' : 'Next Question';
+            } else {
+                nextBtn.disabled = true;
+                nextBtn.textContent = (currentQuizIndex === quizQuestions.length - 1) ? 'Submit Assessment' : 'Next Question';
+            }
+        }
+
+        function selectQuizOption(oIdx) {
+            selectedAnswers[currentQuizIndex] = oIdx;
+            renderQuizQuestion();
+        }
+
+        function nextQuizQuestion() {
+            if (currentQuizIndex < quizQuestions.length - 1) {
+                currentQuizIndex++;
+                renderQuizQuestion();
+            } else {
+                submitQuiz();
+            }
+        }
+
+        function submitQuiz() {
+            let score = 0;
+            quizQuestions.forEach((q, idx) => {
+                if (selectedAnswers[idx] === q.correct) {
+                    score++;
+                }
+            });
+
+            if (userProgress.bestScore === null || score > userProgress.bestScore) {
+                userProgress.bestScore = score;
+                localStorage.setItem('dalal_progress', JSON.stringify(userProgress));
+            }
+
+            let percent = Math.round((score / quizQuestions.length) * 100);
+            document.getElementById('final-score-val').textContent = score;
+            document.getElementById('final-percentage').textContent = percent;
+
+            let feedback = "Keep reviewing the curriculum modules to strengthen your understanding!";
+            if (percent >= 80) {
+                feedback = "Outstanding! You have a solid grasp of Indian stock markets and financial analysis.";
+            } else if (percent >= 50) {
+                feedback = "Good effort! Review the chapters on financial statements and ratios to boost your score.";
+            }
+            document.getElementById('result-feedback-message').textContent = feedback;
+
+            document.getElementById('quiz-question-container').classList.add('hidden');
+            document.getElementById('quiz-controls').classList.add('hidden');
+            document.getElementById('quiz-results-box').classList.remove('hidden');
+        }
+
+        function resetQuiz() {
+            initQuiz();
+        }
+    </script>
+</body>
+</html>
